@@ -1,0 +1,8 @@
+.DS_Store
+/target/
+# *.jar
+/lib/
+# MUST directory, LAST
+!.gitkeep
+
+
