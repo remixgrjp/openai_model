@@ -24,8 +24,16 @@ public class App{
 			.apiKey( System.getenv( "OPENAI_API_KEY" ) )
 			.build();
 
-			CompletableFuture futureModels= (CompletableFuture)( openAI.models().getList() );
-			List models= (List)( futureModels.join() );
+			CompletableFuture<List<ModelResponse>> futureModels=
+				(CompletableFuture<List<ModelResponse>>)( openAI.models().getList() );
+			List<ModelResponse> models= (List<ModelResponse>)( futureModels.join() );
+			// ORDER BY MODEL ID
+			java.util.Collections.sort( models, new java.util.Comparator<ModelResponse>(){
+				@Override
+				public int compare( ModelResponse a, ModelResponse b ){
+					return a.getId().compareTo( b.getId() );
+				}
+			} );
 			for( Iterator it= models.iterator(); it.hasNext(); ){
 				ModelResponse m= (ModelResponse)( it.next() );
 				Timestamp t= new Timestamp( 1000 * m.getCreated() );
