@@ -1,7 +1,7 @@
 package jp.example;
 
 import io.github.sashirestela.openai.BaseSimpleOpenAI;
-import io.github.sashirestela.openai.domain.model.ModelResponse;
+import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.SimpleOpenAI;
 
 import java.sql.Timestamp;
@@ -24,18 +24,18 @@ public class App{
 			.apiKey( System.getenv( "OPENAI_API_KEY" ) )
 			.build();
 
-			CompletableFuture<List<ModelResponse>> futureModels=
-				(CompletableFuture<List<ModelResponse>>)( openAI.models().getList() );
-			List<ModelResponse> models= (List<ModelResponse>)( futureModels.join() );
+			CompletableFuture<List<Model>> futureModels=
+				(CompletableFuture<List<Model>>)( openAI.models().getList() );
+			List<Model> models= (List<Model>)( futureModels.join() );
 			// ORDER BY MODEL ID
-			java.util.Collections.sort( models, new java.util.Comparator<ModelResponse>(){
+			java.util.Collections.sort( models, new java.util.Comparator<Model>(){
 				@Override
-				public int compare( ModelResponse a, ModelResponse b ){
+				public int compare( Model a, Model b ){
 					return a.getId().compareTo( b.getId() );
 				}
 			} );
 			for( Iterator it= models.iterator(); it.hasNext(); ){
-				ModelResponse m= (ModelResponse)( it.next() );
+				Model m= (Model)( it.next() );
 				Timestamp t= new Timestamp( 1000 * m.getCreated() );
 				System.out.println( String.format(
 					"%s,%s,%-15s,%s", sdf.format( t ), m.getObject(), m.getOwnedBy(), m.getId() ) );
